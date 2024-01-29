@@ -7,12 +7,12 @@ import {
   UserData,
   asyncProcess,
   backgroundProcess
-} from "./pec3";
+} from './pec3';
 
 /**
  * It checks whether the given promise is rejected and
  * return the error value.
- * 
+ *
  * @param {Promise} promise A promise to be checked
  * @return {any} The error captured
  */
@@ -27,8 +27,8 @@ async function captureException(promise) {
 }
 
 /**
- * 
- * @param {Array} items The list of items that the function returned will return 
+ *
+ * @param {Array} items The list of items that the function returned will return
  * on each call.
  * @param {(index:number,item:any,items:Array)=>void} cb Callback that will be invoked on
  * each item, in order to control the production flow.
@@ -39,14 +39,14 @@ function createProducer(items, cb = null) {
   return async () => {
     if (cb) cb(curIndex, items[curIndex], items);
     return items[curIndex++];
-  }
+  };
 }
 
 /**
  * It waits until a certain amount of time has passed
- * 
- * @param {number} amount 
- * @returns {Promise} A promise that will be resolved after `amount` millis
+ *
+ * @param {number} amount
+ * @returns {Promise} A promise that will be resolved after `amount` milliseconds
  */
 function sleep(amount) {
   return new Promise((resolve, reject) => {
@@ -59,12 +59,14 @@ function sleep(amount) {
   });
 }
 
-function time() { return new Date().getTime(); }
+function time() {
+  return new Date().getTime();
+}
 
 // --------------------------------------------------------------------------------
 // EXERCISE 1
 // --------------------------------------------------------------------------------
-describe("generateStats", () => {
+describe('generateStats', () => {
   /**
    * Default callback that returns the same it accepts.
    * Named so for the sake of shortness
@@ -73,12 +75,12 @@ describe("generateStats", () => {
   test('The function should validate input arguments', () => {
     expect(generateStats(undefined, _).e).toBe('Invalid input');
     expect(generateStats(null, _).e).toBe('Invalid input');
-    expect(generateStats("", _).e).toBe('Invalid input');
+    expect(generateStats('', _).e).toBe('Invalid input');
     expect(generateStats(5, _).e).toBe('Invalid input');
     expect(generateStats({}, _).e).toBe('Invalid input');
   });
   test('The function should use the given callback', () => {
-    const cb = jest.fn(_)
+    const cb = jest.fn(_);
     generateStats([], cb);
     expect(cb.mock.calls).toHaveLength(1);
   });
@@ -93,11 +95,19 @@ describe("generateStats", () => {
   });
   test('The function algorithm should work when no duplicates', () => {
     expect(generateStats(['a', 'b', 'c'], _).d).toEqual({ a: 1, b: 1, c: 1 });
-    expect(generateStats(['a', 'b', 'c', null], _).d).toEqual({ a: 1, b: 1, c: 1 });
-    expect(generateStats([null, 'a', 'b', 'c'], _).d).toEqual({ a: 1, b: 1, c: 1 });
+    expect(generateStats(['a', 'b', 'c', null], _).d).toEqual({
+      a: 1,
+      b: 1,
+      c: 1
+    });
+    expect(generateStats([null, 'a', 'b', 'c'], _).d).toEqual({
+      a: 1,
+      b: 1,
+      c: 1
+    });
   });
-  test('The function algorithm should recognise letter case and variations', () => {
-    expect(generateStats(['a', 'A', 'á'], _).d).toEqual({ "a": 1, "A": 1, "á": 1 });
+  test('The function algorithm should recognize letter case and variations', () => {
+    expect(generateStats(['a', 'A', 'á'], _).d).toEqual({ a: 1, A: 1, á: 1 });
   });
   test('The function algorithm should count duplicates and variations', () => {
     expect(generateStats(['a', 'a'], _).d).toEqual({ a: 2 });
@@ -105,25 +115,25 @@ describe("generateStats", () => {
     expect(generateStats(['a', 'A', 'A', 'a'], _).d).toEqual({ a: 2, A: 2 });
   });
   test('The function should return the callback response', () => {
-    const ref = Symbol("output");
+    const ref = Symbol('output');
     expect(generateStats(['a'], () => ref)).toBe(ref);
   });
 });
 // --------------------------------------------------------------------------------
 // EXERCISE 2
 // --------------------------------------------------------------------------------
-describe("callbackPromise", () => {
-  const _ = a => a;
-  const failWith = (err) => a => { throw err };
+describe('callbackPromise', () => {
+  const _ = (a) => a;
+  const failWith = (err) => (a) => {
+    throw err;
+  };
 
-  beforeEach(() => {
-
-  })
+  beforeEach(() => {});
   test('The function should return a promise', () => {
     expect(callbackPromise(0, [], _)).toBeInstanceOf(Promise);
   });
   test('The function should make use of the callback provided', async () => {
-    const cb = jest.fn(_)
+    const cb = jest.fn(_);
     await callbackPromise(0, [], cb);
     expect(cb.mock.calls).toHaveLength(1);
   });
@@ -132,16 +142,18 @@ describe("callbackPromise", () => {
     return expect(callbackPromise(0, [], failWith(err))).rejects.toBe(err);
   });
   test('The promise should be resolved if data is valid', (done) => {
-    callbackPromise(0, [], _).then(data => {
-      done();
-    }).catch((e) => {
-      throw new Error(`Promise should not have failed with error ${e}`);
-    });
+    callbackPromise(0, [], _)
+      .then((data) => {
+        done();
+      })
+      .catch((e) => {
+        throw new Error(`Promise should not have failed with error ${e}`);
+      });
   });
   test('The promise should not be resolved before the given time', (done) => {
     const t0 = new Date().getTime();
-    const time = 250; // millis
-    callbackPromise(time, [], _).then(data => {
+    const time = 250; // milliseconds
+    callbackPromise(time, [], _).then((data) => {
       const t1 = new Date().getTime();
       expect(t1 - t0).toBeGreaterThanOrEqual(time);
       done();
@@ -151,26 +163,29 @@ describe("callbackPromise", () => {
     const t0 = new Date().getTime();
     const time = 250;
     const threshold = 50;
-    callbackPromise(time, [], _).then(data => {
+    callbackPromise(time, [], _).then((data) => {
       const t1 = new Date().getTime();
       expect(t1 - t0).toBeLessThanOrEqual(time + threshold);
       done();
     });
   });
   test('The promise should resolve an array instance', () => {
-    return expect(callbackPromise(0, [1, 2, 3], _)).resolves.toBeInstanceOf(Array);
+    return expect(callbackPromise(0, [1, 2, 3], _)).resolves.toBeInstanceOf(
+      Array
+    );
   });
   test('The promise algorithm must perform the matrix sum', () => {
     const input = [0, -1, -2, -3, -4, -5];
     const cb = () => [0, 1, 2, 3, 4, 5];
-    return expect(callbackPromise(0, input, cb)).resolves.toEqual([0, 0, 0, 0, 0, 0]);
+    return expect(callbackPromise(0, input, cb)).resolves.toEqual([
+      0, 0, 0, 0, 0, 0
+    ]);
   });
-
 });
 // --------------------------------------------------------------------------------
 // EXERCISE 3
 // --------------------------------------------------------------------------------
-describe("validateForm", () => {
+describe('validateForm', () => {
   const userAlwaysExists = () => Promise.resolve(true);
   const userNeverExists = () => Promise.resolve(false);
   const defaultUser = new UserForm({
@@ -189,34 +204,53 @@ describe("validateForm", () => {
     expect(cb.mock.calls).toHaveLength(1);
   });
   test('It should fail when username is null', async () => {
-    const exception = await captureException(validateForm({ ...defaultUser, userName: null }, userNeverExists));
-    expect(exception).toBe("userName cannot be null");
+    const exception = await captureException(
+      validateForm({ ...defaultUser, userName: null }, userNeverExists)
+    );
+    expect(exception).toBe('userName cannot be null');
   });
   test('It should fail when password is null', async () => {
-    const exception = await captureException(validateForm({ ...defaultUser, password: null }, userNeverExists));
-    expect(exception).toBe("password cannot be null");
+    const exception = await captureException(
+      validateForm({ ...defaultUser, password: null }, userNeverExists)
+    );
+    expect(exception).toBe('password cannot be null');
   });
-  test('It should fail when passwords doesn\t match', async () => {
-    const exception = await captureException(validateForm({ ...defaultUser, confirmPassword: defaultUser.password + "." }, userNeverExists));
+  test('It should fail when passwords do not match', async () => {
+    const exception = await captureException(
+      validateForm(
+        { ...defaultUser, confirmPassword: defaultUser.password + '.' },
+        userNeverExists
+      )
+    );
     expect(exception).toBe("passwords don't match");
   });
   test('It should fail when username already exists', async () => {
-    const exception = await captureException(validateForm(defaultUser, userAlwaysExists));
-    expect(exception).toBe("userName already exists");
+    const exception = await captureException(
+      validateForm(defaultUser, userAlwaysExists)
+    );
+    expect(exception).toBe('userName already exists');
   });
   test('It should return the user data when the validation is correct', async () => {
-    expect(await validateForm(defaultUser, userNeverExists)).toEqual(defaultUser);
+    expect(await validateForm(defaultUser, userNeverExists)).toEqual(
+      defaultUser
+    );
   });
 });
 // --------------------------------------------------------------------------------
 // EXERCISE 4
 // --------------------------------------------------------------------------------
-describe("registrationProcess", () => {
-  const userData = new UserData({ username: 'User name', password: 'password', email: 'e@mail' });
+describe('registrationProcess', () => {
+  const userData = new UserData({
+    username: 'User name',
+    password: 'password',
+    email: 'e@mail'
+  });
   const getUserData = async () => userData;
   const validateData = async (data) => new Date().getTime();
-  const saveUserData = async (data) => "uid-" + (new Date().getTime());
-  const failWith = (err) => async () => { throw err };
+  const saveUserData = async (data) => 'uid-' + new Date().getTime();
+  const failWith = (err) => async () => {
+    throw err;
+  };
 
   test('It should return a promise', () => {
     const result = registrationProcess(getUserData, validateData, saveUserData);
@@ -227,12 +261,12 @@ describe("registrationProcess", () => {
     await registrationProcess(cb, validateData, saveUserData);
     expect(cb.mock.calls).toHaveLength(1);
   });
-  test('It should capture the errors throwed in getUserData()', async () => {
+  test('It should capture the errors thrown in getUserData()', async () => {
     expect(
       await captureException(
-        registrationProcess(failWith("getUserData"), validateData, saveUserData)
+        registrationProcess(failWith('getUserData'), validateData, saveUserData)
       )
-    ).toBe("REGISTRATION FAILED: getUserData");
+    ).toBe('REGISTRATION FAILED: getUserData');
   });
   test('It should call validateData()', async () => {
     const cb = jest.fn(validateData);
@@ -244,12 +278,12 @@ describe("registrationProcess", () => {
     await registrationProcess(getUserData, cb, saveUserData);
     expect(cb).toHaveBeenCalledWith(userData);
   });
-  test('It should capture the errors throwed in validateData()', async () => {
+  test('It should capture the errors thrown in validateData()', async () => {
     expect(
       await captureException(
-        registrationProcess(getUserData, failWith("validateData"), saveUserData)
+        registrationProcess(getUserData, failWith('validateData'), saveUserData)
       )
-    ).toBe("REGISTRATION FAILED: validateData");
+    ).toBe('REGISTRATION FAILED: validateData');
   });
   test('It should call saveUserData()', async () => {
     const cb = jest.fn(saveUserData);
@@ -261,40 +295,44 @@ describe("registrationProcess", () => {
     await registrationProcess(getUserData, validateData, cb);
     expect(cb).toHaveBeenCalledWith(userData);
   });
-  test('It should capture the errors throwed in saveUserData()', async () => {
+  test('It should capture the errors thrown in saveUserData()', async () => {
     expect(
       await captureException(
-        registrationProcess(getUserData, validateData, failWith("saveUserData"))
+        registrationProcess(getUserData, validateData, failWith('saveUserData'))
       )
-    ).toBe("REGISTRATION FAILED: saveUserData");
+    ).toBe('REGISTRATION FAILED: saveUserData');
   });
   test('It should return the user input data', async () => {
-    const data = await registrationProcess(getUserData, validateData, saveUserData);
-    expect(data).toHaveProperty("userData");
+    const data = await registrationProcess(
+      getUserData,
+      validateData,
+      saveUserData
+    );
+    expect(data).toHaveProperty('userData');
     expect(data.userData).toBeInstanceOf(UserData);
     expect(data.userData).toEqual(userData);
   });
   test('It should return the validation code', async () => {
     const cb = jest.fn(validateData);
     const data = await registrationProcess(getUserData, cb, saveUserData);
-    const validationCode = await cb.mock.results[0].value
+    const validationCode = await cb.mock.results[0].value;
 
-    expect(data).toHaveProperty("validationCode");
+    expect(data).toHaveProperty('validationCode');
     expect(data.validationCode).toBe(validationCode);
   });
   test('It should return the new user identifier', async () => {
     const cb = jest.fn(saveUserData);
     const data = await registrationProcess(getUserData, validateData, cb);
-    const userId = await cb.mock.results[0].value
+    const userId = await cb.mock.results[0].value;
 
-    expect(data).toHaveProperty("userId");
+    expect(data).toHaveProperty('userId');
     expect(data.userId).toBe(userId);
   });
 });
 // --------------------------------------------------------------------------------
 // EXERCISE 5
 // --------------------------------------------------------------------------------
-describe("asyncProcess", () => {
+describe('asyncProcess', () => {
   const defaultProduction = [[1, 2, 3], [4, 5, 6], [7], [8]];
   const defaultProducer = () => createProducer(defaultProduction);
   const defaultConsumer = () => async (data) => data;
@@ -306,17 +344,21 @@ describe("asyncProcess", () => {
   test('It should call the produce() function the right amount of times', async () => {
     const cb = jest.fn(defaultProducer());
     const times = defaultProduction.length;
-    await asyncProcess(times, cb, defaultConsumer(), "fgusss");
+    await asyncProcess(times, cb, defaultConsumer(), 'fgusss');
     expect(cb.mock.calls).toHaveLength(times);
   });
   test('It should call the consume() function the right amount of times', async () => {
-    const production = [[1, 2, 3, 4, 5], [2, 3, 4], [3, 4, 5]];
+    const production = [
+      [1, 2, 3, 4, 5],
+      [2, 3, 4],
+      [3, 4, 5]
+    ];
     const producer = createProducer(production);
     const cb = jest.fn(defaultConsumer());
     const times = production.length;
     await asyncProcess(times, producer, cb);
 
-    expect(cb.mock.calls).toHaveLength(production.flatMap(i => i).length);
+    expect(cb.mock.calls).toHaveLength(production.flatMap((i) => i).length);
   });
   test('It should fail if producer raises an error', async () => {
     const times = 50;
@@ -334,14 +376,14 @@ describe("asyncProcess", () => {
       asyncProcess(times, brokenProducerBuilder(3), defaultConsumer())
     );
     expect(err).toBeInstanceOf(Error);
-    expect(err.message).toBe("Error on iteration 3: error-at-3");
+    expect(err.message).toBe('Error on iteration 3: error-at-3');
 
-    // Test that it fails on iteration #5 
+    // Test that it fails on iteration #5
     err = await captureException(
       asyncProcess(times, brokenProducerBuilder(5), defaultConsumer())
     );
     expect(err).toBeInstanceOf(Error);
-    expect(err.message).toBe("Error on iteration 5: error-at-5");
+    expect(err.message).toBe('Error on iteration 5: error-at-5');
   });
 
   test('It should return the right production', async () => {
@@ -350,14 +392,18 @@ describe("asyncProcess", () => {
     // Reverse-additive consumer
     const additiveConsumer = (amount) => async (data) => data + amount;
 
-    const result = await asyncProcess(production.length, producer, additiveConsumer(3));
+    const result = await asyncProcess(
+      production.length,
+      producer,
+      additiveConsumer(3)
+    );
     expect(result).toEqual([4, 5, 6, 7, 8, 9, 10]);
   });
 });
 // --------------------------------------------------------------------------------
 // EXERCISE 6
 // --------------------------------------------------------------------------------
-describe("backgroundProcess", () => {
+describe('backgroundProcess', () => {
   const STATUSES = {
     Idle: 0,
     Running: 1,
@@ -368,63 +414,63 @@ describe("backgroundProcess", () => {
   const defaultProducer = () => createProducer(defaultProduction);
   const emptyProducer = () => createProducer([null]);
   const defaultConsumer = () => async (data) => data;
-  const periodicChecker = (fn, period, check) => new Promise((resolve, reject) => {
-    let done = false;
-    let iteration = 0;
-    let elapsed = 0;
-    const id = setInterval(() => {
-      try {
-        elapsed += new Date().getTime();
-        const result = fn();
-        if (check) {
-          check(iteration, elapsed, result);
-        }
-
-        if (result.status === STATUSES.Finished) {
-          done = true;
-          resolve(result);
-        }
-      } catch (e) {
-        done = true;
-        reject(e);
-      } finally {
-        if (done) clearInterval(id);
-      }
-    }, period);
-  });
-  const processCompleted = (fn) => new Promise((resolve, reject) => {
-    if (typeof (fn) != 'function') {
-      reject('The process response is not a function');
-    } else {
-      const start = time();
-
+  const periodicChecker = (fn, period, check) =>
+    new Promise((resolve, reject) => {
+      let done = false;
+      let iteration = 0;
+      let elapsed = 0;
       const id = setInterval(() => {
-        let clear = false;
-
         try {
-          const stats = fn();
-          const elapsed = time() - start;
-          if (elapsed > 10 * MAX_MS) {
-            throw new Error("Function took too much time to finish");
+          elapsed += new Date().getTime();
+          const result = fn();
+          if (check) {
+            check(iteration, elapsed, result);
           }
 
-          if (stats.status === STATUSES.Finished) {
-            clear = true;
-            resolve(stats);
+          if (result.status === STATUSES.Finished) {
+            done = true;
+            resolve(result);
           }
-        } catch (err) {
-          clear = true;
-          reject(err);
+        } catch (e) {
+          done = true;
+          reject(e);
         } finally {
-          if (clear) {
-            clearInterval(id);
-          }
+          if (done) clearInterval(id);
         }
+      }, period);
+    });
+  const processCompleted = (fn) =>
+    new Promise((resolve, reject) => {
+      if (typeof fn != 'function') {
+        reject('The process response is not a function');
+      } else {
+        const start = time();
 
-      }, 25);
-    }
-  });
+        const id = setInterval(() => {
+          let clear = false;
 
+          try {
+            const stats = fn();
+            const elapsed = time() - start;
+            if (elapsed > 10 * MAX_MS) {
+              throw new Error('Function took too much time to finish');
+            }
+
+            if (stats.status === STATUSES.Finished) {
+              clear = true;
+              resolve(stats);
+            }
+          } catch (err) {
+            clear = true;
+            reject(err);
+          } finally {
+            if (clear) {
+              clearInterval(id);
+            }
+          }
+        }, 25);
+      }
+    });
 
   test('It should return an async function', () => {
     const fn = backgroundProcess(emptyProducer(), defaultConsumer());
@@ -434,9 +480,9 @@ describe("backgroundProcess", () => {
   test('It should return the right structure after invoking returned function', () => {
     const fn = backgroundProcess(emptyProducer(), defaultConsumer());
     const result = fn();
-    expect(result).toHaveProperty("available");
-    expect(result).toHaveProperty("totalProduced");
-    expect(result).toHaveProperty("status");
+    expect(result).toHaveProperty('available');
+    expect(result).toHaveProperty('totalProduced');
+    expect(result).toHaveProperty('status');
   });
 
   test('It should finish in a finite amount of time', (done) => {
@@ -467,8 +513,7 @@ describe("backgroundProcess", () => {
     const consumer = async (item) => calls++;
 
     await processCompleted(backgroundProcess(producer, consumer));
-    expect(calls).toBe(array.flatMap(i => i).length - 1); // null is not consumed
-
+    expect(calls).toBe(array.flatMap((i) => i).length - 1); // null is not consumed
   });
 
   test('It should clear the production queue after each invocation of the resulting function', () => {
@@ -478,7 +523,7 @@ describe("backgroundProcess", () => {
     const consumer = async (item) => {
       consumed.push(item);
       return item;
-    }
+    };
 
     const fn = backgroundProcess(producer, consumer);
 
@@ -497,7 +542,7 @@ describe("backgroundProcess", () => {
     const consumer = async (item) => {
       consumed.push(item);
       return item;
-    }
+    };
 
     const fn = backgroundProcess(producer, consumer);
 
@@ -533,5 +578,4 @@ describe("backgroundProcess", () => {
 
     expect(fn().status).toBe(STATUSES.Finished);
   });
-
 });
