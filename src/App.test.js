@@ -1,3 +1,13 @@
+/*
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+*/
 import {
   generateStats,
   callbackPromise,
@@ -7,7 +17,7 @@ import {
   UserData,
   asyncProcess,
   backgroundProcess
-} from './pec3';
+} from './App';
 
 /**
  * It checks whether the given promise is rejected and
@@ -128,7 +138,7 @@ describe('callbackPromise', () => {
     throw err;
   };
 
-  beforeEach(() => {});
+  beforeEach(() => { });
   test('The function should return a promise', () => {
     expect(callbackPromise(0, [], _)).toBeInstanceOf(Promise);
   });
