@@ -1,11 +1,4 @@
 {
-    "jest.autoRun": {
-        "watch": false,
-        "onSave": "test-src-file",
-        "onStartup": [
-            "all-tests"
-        ]
-    },
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "editor.detectIndentation": false,
@@ -14,5 +7,10 @@
       "editor.formatOnSave": true
     },
     "prettier.trailingComma": "none",
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "emmet.triggerExpansionOnTab": true,
+    "jest.runMode": {
+      "type": "on-save",
+      "runAllTestsOnStartup": true
+    }
 }
