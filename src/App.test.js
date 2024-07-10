@@ -377,7 +377,7 @@ describe('backgroundProcess', () => {
   const periodicChecker = (fn, period, check) =>
     new Promise((resolve, reject) => {
       let done = false;
-      let iteration = 0;
+      const iteration = 0;
       let elapsed = 0;
       const id = setInterval(() => {
         try {
@@ -498,7 +498,7 @@ describe('backgroundProcess', () => {
   test('It should count the number of products produced in background', () => {
     const array = [[1, 2, 3], [4, 5, 6], [7, 8, 9], null];
     const producer = createProducer(array);
-    let consumed = [];
+    const consumed = [];
     const consumer = async (item) => {
       consumed.push(item);
       return item;
