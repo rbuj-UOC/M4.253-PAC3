@@ -8,16 +8,7 @@ test('renders learn react link', () => {
   expect(linkElement).toBeInTheDocument();
 });
 */
-import {
-  generateStats,
-  callbackPromise,
-  validateForm,
-  UserForm,
-  registrationProcess,
-  UserData,
-  asyncProcess,
-  backgroundProcess
-} from './App';
+import { generateStats, callbackPromise, validateForm, UserForm, registrationProcess, UserData, asyncProcess, backgroundProcess } from './App';
 
 /**
  * It checks whether the given promise is rejected and
@@ -138,7 +129,7 @@ describe('callbackPromise', () => {
     throw err;
   };
 
-  beforeEach(() => { });
+  beforeEach(() => {});
   test('The function should return a promise', () => {
     expect(callbackPromise(0, [], _)).toBeInstanceOf(Promise);
   });
@@ -180,16 +171,12 @@ describe('callbackPromise', () => {
     });
   });
   test('The promise should resolve an array instance', () => {
-    return expect(callbackPromise(0, [1, 2, 3], _)).resolves.toBeInstanceOf(
-      Array
-    );
+    return expect(callbackPromise(0, [1, 2, 3], _)).resolves.toBeInstanceOf(Array);
   });
   test('The promise algorithm must perform the matrix sum', () => {
     const input = [0, -1, -2, -3, -4, -5];
     const cb = () => [0, 1, 2, 3, 4, 5];
-    return expect(callbackPromise(0, input, cb)).resolves.toEqual([
-      0, 0, 0, 0, 0, 0
-    ]);
+    return expect(callbackPromise(0, input, cb)).resolves.toEqual([0, 0, 0, 0, 0, 0]);
   });
 });
 // --------------------------------------------------------------------------------
@@ -214,36 +201,23 @@ describe('validateForm', () => {
     expect(cb.mock.calls).toHaveLength(1);
   });
   test('It should fail when username is null', async () => {
-    const exception = await captureException(
-      validateForm({ ...defaultUser, userName: null }, userNeverExists)
-    );
+    const exception = await captureException(validateForm({ ...defaultUser, userName: null }, userNeverExists));
     expect(exception).toBe('userName cannot be null');
   });
   test('It should fail when password is null', async () => {
-    const exception = await captureException(
-      validateForm({ ...defaultUser, password: null }, userNeverExists)
-    );
+    const exception = await captureException(validateForm({ ...defaultUser, password: null }, userNeverExists));
     expect(exception).toBe('password cannot be null');
   });
   test('It should fail when passwords do not match', async () => {
-    const exception = await captureException(
-      validateForm(
-        { ...defaultUser, confirmPassword: defaultUser.password + '.' },
-        userNeverExists
-      )
-    );
+    const exception = await captureException(validateForm({ ...defaultUser, confirmPassword: defaultUser.password + '.' }, userNeverExists));
     expect(exception).toBe("passwords don't match");
   });
   test('It should fail when username already exists', async () => {
-    const exception = await captureException(
-      validateForm(defaultUser, userAlwaysExists)
-    );
+    const exception = await captureException(validateForm(defaultUser, userAlwaysExists));
     expect(exception).toBe('userName already exists');
   });
   test('It should return the user data when the validation is correct', async () => {
-    expect(await validateForm(defaultUser, userNeverExists)).toEqual(
-      defaultUser
-    );
+    expect(await validateForm(defaultUser, userNeverExists)).toEqual(defaultUser);
   });
 });
 // --------------------------------------------------------------------------------
@@ -272,11 +246,7 @@ describe('registrationProcess', () => {
     expect(cb.mock.calls).toHaveLength(1);
   });
   test('It should capture the errors thrown in getUserData()', async () => {
-    expect(
-      await captureException(
-        registrationProcess(failWith('getUserData'), validateData, saveUserData)
-      )
-    ).toBe('REGISTRATION FAILED: getUserData');
+    expect(await captureException(registrationProcess(failWith('getUserData'), validateData, saveUserData))).toBe('REGISTRATION FAILED: getUserData');
   });
   test('It should call validateData()', async () => {
     const cb = jest.fn(validateData);
@@ -289,11 +259,7 @@ describe('registrationProcess', () => {
     expect(cb).toHaveBeenCalledWith(userData);
   });
   test('It should capture the errors thrown in validateData()', async () => {
-    expect(
-      await captureException(
-        registrationProcess(getUserData, failWith('validateData'), saveUserData)
-      )
-    ).toBe('REGISTRATION FAILED: validateData');
+    expect(await captureException(registrationProcess(getUserData, failWith('validateData'), saveUserData))).toBe('REGISTRATION FAILED: validateData');
   });
   test('It should call saveUserData()', async () => {
     const cb = jest.fn(saveUserData);
@@ -306,18 +272,10 @@ describe('registrationProcess', () => {
     expect(cb).toHaveBeenCalledWith(userData);
   });
   test('It should capture the errors thrown in saveUserData()', async () => {
-    expect(
-      await captureException(
-        registrationProcess(getUserData, validateData, failWith('saveUserData'))
-      )
-    ).toBe('REGISTRATION FAILED: saveUserData');
+    expect(await captureException(registrationProcess(getUserData, validateData, failWith('saveUserData')))).toBe('REGISTRATION FAILED: saveUserData');
   });
   test('It should return the user input data', async () => {
-    const data = await registrationProcess(
-      getUserData,
-      validateData,
-      saveUserData
-    );
+    const data = await registrationProcess(getUserData, validateData, saveUserData);
     expect(data).toHaveProperty('userData');
     expect(data.userData).toBeInstanceOf(UserData);
     expect(data.userData).toEqual(userData);
@@ -382,16 +340,12 @@ describe('asyncProcess', () => {
     };
 
     // Test that it fails on iteration #3
-    let err = await captureException(
-      asyncProcess(times, brokenProducerBuilder(3), defaultConsumer())
-    );
+    let err = await captureException(asyncProcess(times, brokenProducerBuilder(3), defaultConsumer()));
     expect(err).toBeInstanceOf(Error);
     expect(err.message).toBe('Error on iteration 3: error-at-3');
 
     // Test that it fails on iteration #5
-    err = await captureException(
-      asyncProcess(times, brokenProducerBuilder(5), defaultConsumer())
-    );
+    err = await captureException(asyncProcess(times, brokenProducerBuilder(5), defaultConsumer()));
     expect(err).toBeInstanceOf(Error);
     expect(err.message).toBe('Error on iteration 5: error-at-5');
   });
@@ -402,11 +356,7 @@ describe('asyncProcess', () => {
     // Reverse-additive consumer
     const additiveConsumer = (amount) => async (data) => data + amount;
 
-    const result = await asyncProcess(
-      production.length,
-      producer,
-      additiveConsumer(3)
-    );
+    const result = await asyncProcess(production.length, producer, additiveConsumer(3));
     expect(result).toEqual([4, 5, 6, 7, 8, 9, 10]);
   });
 });
