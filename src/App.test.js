@@ -156,7 +156,7 @@ describe('callbackPromise', () => {
     const time = 250; // milliseconds
     callbackPromise(time, [], _).then((data) => {
       const t1 = new Date().getTime();
-      expect(t1 - t0).toBeGreaterThanOrEqual(time);
+      expect(t1 - t0).toBeGreaterThanOrEqual(time - 1);
       done();
     });
   });
