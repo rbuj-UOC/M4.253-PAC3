@@ -1,12 +1,5 @@
 {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.detectIndentation": false,
     "cSpell.language": "en,ca,es",
-    "[javascript]": {
-      "editor.formatOnSave": true
-    },
-    "prettier.trailingComma": "none",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "emmet.triggerExpansionOnTab": true,
     "jest.runMode": {
