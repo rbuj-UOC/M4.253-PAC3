@@ -1,3 +1,5 @@
+[![Node.js CI](https://github.com/rbuj-UOC/M4.253-PAC3/actions/workflows/nestjs.yml/badge.svg)](https://github.com/rbuj-UOC/M4.253-PAC3/actions/workflows/nestjs.yml)
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
