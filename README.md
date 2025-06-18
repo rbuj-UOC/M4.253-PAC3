@@ -1,4 +1,4 @@
-[![Node.js CI](https://github.com/rbuj-UOC/M4.253-PAC3/actions/workflows/nestjs.yml/badge.svg)](https://github.com/rbuj-UOC/M4.253-PAC3/actions/workflows/nestjs.yml)
+[![Node.js CI](https://github.com/rbuj-UOC/M4.253-PAC3/actions/workflows/nodejs.yml/badge.svg)](https://github.com/rbuj-UOC/M4.253-PAC3/actions/workflows/nodejs.yml)
 
 # React + Vite
 
